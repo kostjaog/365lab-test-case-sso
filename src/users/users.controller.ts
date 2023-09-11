@@ -5,6 +5,7 @@ import {
   Post,
   UseGuards,
   Request,
+  UnauthorizedException,
 } from '@nestjs/common';
 
 import * as bcrypt from 'bcrypt';
@@ -16,14 +17,12 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  //post/ signup
   @Post('/signup')
   async addUser(
     @Body('password') userPassword: string,
     @Body('username') userName: string,
   ) 
   {
-    //hash password
     const saltOrRounds = 10;
     const hashedPassword = await bcrypt.hash(userPassword, saltOrRounds);
 
@@ -38,7 +37,6 @@ export class UsersController {
     };
   }
 
-  //Post / Login
   @UseGuards(LocalAuthGuard)
   @Post('/login')
   login(@Request() req): any {
@@ -46,15 +44,13 @@ export class UsersController {
             msg: 'User logged in'};
   };
 
-  //Get / protected
   @UseGuards(AuthenticatedGuard)
-  @Get('/whoami')
+  @Get('/')
   getHello(@Request() req): string {
-    console.log(req)
+
     return req.user;
   };
 
-  //Get / logout
   @Get('/logout')
     logout(@Request() req): any {
       req.session.destroy()

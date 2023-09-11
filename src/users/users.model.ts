@@ -13,7 +13,6 @@ export const UserSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-// User interface
 export interface User extends mongoose.Document {
     _id: string;
     username: string;
